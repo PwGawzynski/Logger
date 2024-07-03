@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: logger
-Version: 0.0.2
+Version: 0.0.3
 Summary: Simple Logger module to log into files
 Home-page: https://github.com/PwGawzynski/Logger
 Author: Paweł Gawżynski && Jakub Wrona
