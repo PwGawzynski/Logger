@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: logger
+Version: 0.0.2
+Summary: Simple Logger module to log into files
+Home-page: https://github.com/PwGawzynski/Logger
+Author: Paweł Gawżynski && Jakub Wrona
+Author-email: pgawynski@icloud.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+
+# Logger
