@@ -3,9 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="logger",
-    version="0.0.4",
+    version="0.0.5",
     packages=find_packages(),
-    install_requires=[],
+    install_requires=[
+        "colorama==0.4.6",
+    ],
     author="Paweł Gawżynski && Jakub Wrona",
     author_email="pgawynski@icloud.com",
     description="Simple Logger module to log into files",
