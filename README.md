@@ -34,4 +34,4 @@ The Logger module is a simple utility designed for logging information to both t
    ```
     - `NAME`: The name of the logger instance, included in file name.
     - `ID`: The ID of the logger instance, included in file name.
-    - `LOG_CAT_PATH`: The path to the directory where log files will be stored.
+    - `LOG_CAT_PATH`: The path to the directory where log files will be stored, if it does not exist, it will be created.
