@@ -12,17 +12,11 @@ The Logger module is a simple utility designed for logging information to both t
 
 ## Requirements
 
-- Python 3.x
+- Python 3.11 nad up
 
 ## Installation
 
-1. Clone the repository:
-   ```sh
-   git clone <repository_url>
-   cd <repository_directory>
-   ```
-
-2. Install any required dependencies:
+1. Install with pip:
    ```sh
    pip install git+<link_to_this_repo>@main
    ```
@@ -36,9 +30,8 @@ The Logger module is a simple utility designed for logging information to both t
 
 2. Create an instance of the `Logger` class with the required parameters:
    ```python
-   Logger = Logger(NAME, ID, LOGS_PATH, LOGS_CATALOG)
+   Logger = Logger(NAME, ID, LOG_CAT_PATH, LOGS_CATALOG)
    ```
-    - `NAME`: The name of the logger instance.
-    - `ID`: The ID of the logger instance.
-    - `LOGS_PATH`: The path to the directory where log files will be stored.
-    - `LOGS_CATALOG`: The name of the log file.
+    - `NAME`: The name of the logger instance, included in file name.
+    - `ID`: The ID of the logger instance, included in file name.
+    - `LOG_CAT_PATH`: The path to the directory where log files will be stored.
