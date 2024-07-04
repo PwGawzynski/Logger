@@ -45,7 +45,7 @@ class Logger(metaclass=SingletonMeta):
 
         # Create the log file path with a safe filename
         log_file_name = f'{self.__app_name}_{self.__instance_id}_logs_' \
-                        f'{datetime.now(timezone.utc).strftime("%Y-%m-%d_%H:%M:%S.%f")[:-3]}_{self.__app_name}.log'
+                        f'{datetime.now(timezone.utc).strftime("%Y-%m-%d_%H:%M:%S.%f")[:-3]}.log'
         log_file_path = os.path.join(self.__log_catalog_path, log_file_name)
         self.__file = open(log_file_path, 'w+')
         self.__script_start_time = time.time()
@@ -53,70 +53,84 @@ class Logger(metaclass=SingletonMeta):
     """
     Simple log message eg. "LOG: [2005-03-19 15:10:26.618]      simple_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix LOG)
     """
 
-    def log(self, text: str):
+    def log(self, text: str, additional_prefix: str = None):
         log_time, console_time = prepare_time()
-        print(f"LOG: [{log_time}]: \t {text}", file=self.__file)
+        print(f"LOG{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + f"LOG: [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.WHITE + f"{additional_prefix if additional_prefix else ''}" +
+                  f"LOG: [{console_time}]: \t {text}" + Style.RESET_ALL)
     """
     Debug message eg. "DEBUG: [2005-03-19 15:10:26.618]      debug_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix DEBUG)
     """
-    def debug(self, text: str):
+    def debug(self, text: str, additional_prefix: str = None):
         log_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
         console_time = datetime.now()
-        print(f"DEBUG: [{log_time}]: \t {text}", file=self.__file)
+        print(f"DEBUG{' ' + additional_prefix if additional_prefix else ''}" +
+               f" [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.MAGENTA + f"DEBUG: [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.MAGENTA + f"DEBUG{' ' + additional_prefix if additional_prefix else ''}" +
+                  f": [{console_time}]: \t {text}" + Style.RESET_ALL)
     """
     Info message eg. "INFO: [2005-03-19 15:10:26.618]      info_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix INFO)
     """
-    def info(self, text: str):
+    def info(self, text: str, additional_prefix: str = None):
         log_time, console_time = prepare_time()
-        print(f"INFO: [{log_time}]: \t {text}", file=self.__file)
+        print(f"INFO{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + f"INFO: [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.WHITE + f"INFO{' '+additional_prefix if additional_prefix else ''}" +
+                  f" [{console_time}]: \t {text}" + Style.RESET_ALL)
     """
     Warning message eg. "WARNING: [2005-03-19 15:10:26.618]      warning_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix WARNING)
     """
-    def warning(self, text: str):
+    def warning(self, text: str, additional_prefix: str = None):
         log_time, console_time = prepare_time()
-        print(f"WARNING: [{log_time}]: \t {text}", file=self.__file)
+        print(f"WARNING{' ' + additional_prefix if additional_prefix else ''} [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + Back.YELLOW + "WARNING: " + Style.RESET_ALL
+            print(Fore.WHITE + Back.YELLOW + f"WARNING{' '+additional_prefix if additional_prefix else ''}" +
+                  " " + Style.RESET_ALL
                   + Fore.YELLOW + f" [{console_time}]: \t {text}" + Style.RESET_ALL)
     """
     Success message eg. "SUCCESS: [2005-03-19 15:10:26.618]      success_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix SUCCESS)
     """
-    def success(self, text: str):
+    def success(self, text: str, additional_prefix: str = None):
         log_time, console_time = prepare_time()
-        print(f"SUCCESS: [{log_time}]: \t {text}", file=self.__file)
+        print(f"SUCCESS{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.GREEN + f"SUCCESS: [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.GREEN + f"SUCCESS{' ' + additional_prefix if additional_prefix else ''}" +
+                  f" [{console_time}]: \t {text}" + Style.RESET_ALL)
     """
     Error message eg. "ERROR: [2005-03-19 15:10:26.618]      error_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix ERROR)
     """
-    def error(self, text: str):
+    def error(self, text: str, additional_prefix: str = None):
         log_time, console_time = prepare_time()
-        print(f"ERROR: [{log_time}]: \t {text}", file=self.__file)
+        print(f"ERROR{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.RED + f"ERROR: [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.RED + f"ERROR{' '+additional_prefix if additional_prefix else ''}" +
+                  f" [{console_time}]: \t {text}" + Style.RESET_ALL)
     """
     Critical message eg. "CRITICAL: [2005-03-19 15:10:26.618]      critical_example"
     @:param text: Text to be logged
+    @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix CRITICAL)
     """
-    def critical(self, text: str):
+    def critical(self, text: str, additional_prefix: str = None):
         log_time, console_time = prepare_time()
-        print(f"CRITICAL: [{log_time}]: \t {text}", file=self.__file)
+        print(f"CRITICAL{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + Back.RED + "CRITICAL:"
-                  + Style.RESET_ALL + Fore.RED + f" [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.WHITE + Back.RED + f"CRITICAL{' ' + additional_prefix if additional_prefix else ''}" +
+                   Style.RESET_ALL + Fore.RED + f" [{console_time}]: \t {text}" + Style.RESET_ALL)
 
     def test_init(self):
         if not self.__log_catalog_path:
