@@ -31,6 +31,12 @@ def prepare_time():
     return log_time, console_time
 
 
+def create_message(text: str, additional_prefix: str, log_type: str) -> str:
+    log_time, console_time = prepare_time()
+    return f"{log_type}{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}"
+
+
+
 class Logger(metaclass=SingletonMeta):
     __file = None
 
@@ -57,80 +63,83 @@ class Logger(metaclass=SingletonMeta):
     """
 
     def log(self, text: str, additional_prefix: str = None):
-        log_time, console_time = prepare_time()
-        print(f"LOG{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'LOG')
+        print(message, file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + f"{additional_prefix if additional_prefix else ''}" +
-                  f"LOG: [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.WHITE + message + Style.RESET_ALL)
+
     """
     Debug message eg. "DEBUG: [2005-03-19 15:10:26.618]      debug_example"
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix DEBUG)
     """
+
     def debug(self, text: str, additional_prefix: str = None):
-        log_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        console_time = datetime.now()
-        print(f"DEBUG{' ' + additional_prefix if additional_prefix else ''}" +
-               f" [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'DEBUG')
+        print(message, file=self.__file)
         if self.__log_to_console:
-            print(Fore.MAGENTA + f"DEBUG{' ' + additional_prefix if additional_prefix else ''}" +
-                  f": [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.MAGENTA + message + Style.RESET_ALL)
+
     """
     Info message eg. "INFO: [2005-03-19 15:10:26.618]      info_example"
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix INFO)
     """
+
     def info(self, text: str, additional_prefix: str = None):
-        log_time, console_time = prepare_time()
-        print(f"INFO{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'INFO')
+        print(message, file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + f"INFO{' '+additional_prefix if additional_prefix else ''}" +
-                  f" [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.WHITE + message + Style.RESET_ALL)
+
     """
     Warning message eg. "WARNING: [2005-03-19 15:10:26.618]      warning_example"
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix WARNING)
     """
+
     def warning(self, text: str, additional_prefix: str = None):
-        log_time, console_time = prepare_time()
-        print(f"WARNING{' ' + additional_prefix if additional_prefix else ''} [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'WARNING')
+        print(message,
+              file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + Back.YELLOW + f"WARNING{' '+additional_prefix if additional_prefix else ''}" +
-                  " " + Style.RESET_ALL
-                  + Fore.YELLOW + f" [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.YELLOW + message + Style.RESET_ALL)
+
     """
     Success message eg. "SUCCESS: [2005-03-19 15:10:26.618]      success_example"
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix SUCCESS)
     """
+
     def success(self, text: str, additional_prefix: str = None):
-        log_time, console_time = prepare_time()
-        print(f"SUCCESS{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'SUCCESS')
+        print(message, file=self.__file)
         if self.__log_to_console:
-            print(Fore.GREEN + f"SUCCESS{' ' + additional_prefix if additional_prefix else ''}" +
-                  f" [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.GREEN + message + Style.RESET_ALL)
+
     """
     Error message eg. "ERROR: [2005-03-19 15:10:26.618]      error_example"
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix ERROR)
     """
+
     def error(self, text: str, additional_prefix: str = None):
-        log_time, console_time = prepare_time()
-        print(f"ERROR{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'ERROR')
+        print(message, file=self.__file)
         if self.__log_to_console:
-            print(Fore.RED + f"ERROR{' '+additional_prefix if additional_prefix else ''}" +
-                  f" [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.RED + message + Style.RESET_ALL)
+
     """
     Critical message eg. "CRITICAL: [2005-03-19 15:10:26.618]      critical_example"
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix CRITICAL)
     """
+
     def critical(self, text: str, additional_prefix: str = None):
-        log_time, console_time = prepare_time()
-        print(f"CRITICAL{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}", file=self.__file)
+        message = create_message(text, additional_prefix, 'CRITICAL')
+        print(message, file=self.__file)
         if self.__log_to_console:
-            print(Fore.WHITE + Back.RED + f"CRITICAL{' ' + additional_prefix if additional_prefix else ''}" +
-                   Style.RESET_ALL + Fore.RED + f" [{console_time}]: \t {text}" + Style.RESET_ALL)
+            print(Fore.BLACK + Back.RED + message + Style.RESET_ALL)
 
     def test_init(self):
         if not self.__log_catalog_path:
