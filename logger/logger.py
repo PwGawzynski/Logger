@@ -25,6 +25,8 @@ Example usage:
 """
 
 
+
+
 def prepare_time():
     log_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
     console_time = datetime.now()
