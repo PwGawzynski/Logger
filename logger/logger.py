@@ -1,6 +1,5 @@
 import os
 import time
-import multiprocessing
 from datetime import datetime, timezone
 
 from colorama import Fore, Style, Back
@@ -25,8 +24,6 @@ Example usage:
     logger.critical("This is a critical message") # RED TEXT WITH RED BACKGROUND
 """
 
-
-file_lock = multiprocessing.Lock()
 
 def prepare_time():
     log_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
@@ -67,8 +64,7 @@ class Logger(metaclass=SingletonMeta):
 
     def log(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'LOG')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message, file=self.__file)
         if self.__log_to_console:
             print(Fore.WHITE + message + Style.RESET_ALL)
 
@@ -80,8 +76,7 @@ class Logger(metaclass=SingletonMeta):
 
     def debug(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'DEBUG')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message, file=self.__file)
         if self.__log_to_console:
             print(Fore.MAGENTA + message + Style.RESET_ALL)
 
@@ -93,8 +88,7 @@ class Logger(metaclass=SingletonMeta):
 
     def info(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'INFO')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message, file=self.__file)
         if self.__log_to_console:
             print(Fore.WHITE + message + Style.RESET_ALL)
 
@@ -106,8 +100,8 @@ class Logger(metaclass=SingletonMeta):
 
     def warning(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'WARNING')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message,
+              file=self.__file)
         if self.__log_to_console:
             print(Fore.YELLOW + message + Style.RESET_ALL)
 
@@ -119,8 +113,7 @@ class Logger(metaclass=SingletonMeta):
 
     def success(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'SUCCESS')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message, file=self.__file)
         if self.__log_to_console:
             print(Fore.GREEN + message + Style.RESET_ALL)
 
@@ -132,8 +125,7 @@ class Logger(metaclass=SingletonMeta):
 
     def error(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'ERROR')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message, file=self.__file)
         if self.__log_to_console:
             print(Fore.RED + message + Style.RESET_ALL)
 
@@ -145,8 +137,7 @@ class Logger(metaclass=SingletonMeta):
 
     def critical(self, text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'CRITICAL')
-        with file_lock:
-            print(message, file=self.__file)
+        print(message, file=self.__file)
         if self.__log_to_console:
             print(Fore.BLACK + Back.RED + message + Style.RESET_ALL)
 
