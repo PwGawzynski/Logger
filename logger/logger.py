@@ -25,8 +25,6 @@ Example usage:
 """
 
 
-
-
 def prepare_time():
     log_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
     console_time = datetime.now()
@@ -38,9 +36,9 @@ def create_message(text: str, additional_prefix: str, log_type: str) -> str:
     return f"{log_type}{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}"
 
 
-
 class Logger(metaclass=SingletonMeta):
     __file = None
+    __lInstance = None
 
     def __init__(self, app_name=None, id=None, log_catalog_path=None, log_to_console=False):
         self.__log_catalog_path = log_catalog_path
@@ -56,7 +54,7 @@ class Logger(metaclass=SingletonMeta):
                         f'{datetime.now(timezone.utc).strftime("%Y-%m-%d_%H:%M:%S.%f")[:-3]}.log'
         log_file_path = os.path.join(self.__log_catalog_path, log_file_name)
         self.__file = open(log_file_path, 'w+')
-        self.__script_start_time = time.time()
+        Logger.__lInstance = self
 
     """
     Simple log message eg. "LOG: [2005-03-19 15:10:26.618]      simple_example"
@@ -64,10 +62,12 @@ class Logger(metaclass=SingletonMeta):
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix LOG)
     """
 
-    def log(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def log(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'LOG')
-        print(message, file=self.__file)
-        if self.__log_to_console:
+        print(Logger.__lInstance)
+        print(message, file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.WHITE + message + Style.RESET_ALL)
 
     """
@@ -76,10 +76,11 @@ class Logger(metaclass=SingletonMeta):
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix DEBUG)
     """
 
-    def debug(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def debug(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'DEBUG')
-        print(message, file=self.__file)
-        if self.__log_to_console:
+        print(message, file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.MAGENTA + message + Style.RESET_ALL)
 
     """
@@ -87,11 +88,11 @@ class Logger(metaclass=SingletonMeta):
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix INFO)
     """
-
-    def info(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def info(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'INFO')
-        print(message, file=self.__file)
-        if self.__log_to_console:
+        print(message, file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.WHITE + message + Style.RESET_ALL)
 
     """
@@ -100,11 +101,12 @@ class Logger(metaclass=SingletonMeta):
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix WARNING)
     """
 
-    def warning(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def warning(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'WARNING')
         print(message,
-              file=self.__file)
-        if self.__log_to_console:
+              file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.YELLOW + message + Style.RESET_ALL)
 
     """
@@ -112,11 +114,11 @@ class Logger(metaclass=SingletonMeta):
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix SUCCESS)
     """
-
-    def success(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def success(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'SUCCESS')
-        print(message, file=self.__file)
-        if self.__log_to_console:
+        print(message, file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.GREEN + message + Style.RESET_ALL)
 
     """
@@ -125,10 +127,11 @@ class Logger(metaclass=SingletonMeta):
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix ERROR)
     """
 
-    def error(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def error(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'ERROR')
-        print(message, file=self.__file)
-        if self.__log_to_console:
+        print(message, file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.RED + message + Style.RESET_ALL)
 
     """
@@ -136,11 +139,11 @@ class Logger(metaclass=SingletonMeta):
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix CRITICAL)
     """
-
-    def critical(self, text: str, additional_prefix: str = None):
+    @staticmethod
+    def critical(text: str, additional_prefix: str = None):
         message = create_message(text, additional_prefix, 'CRITICAL')
-        print(message, file=self.__file)
-        if self.__log_to_console:
+        print(message, file=Logger.__lInstance.__file)
+        if Logger.__lInstance.__log_to_console:
             print(Fore.BLACK + Back.RED + message + Style.RESET_ALL)
 
     def test_init(self):
