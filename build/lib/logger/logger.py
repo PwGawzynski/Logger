@@ -1,6 +1,7 @@
 import os
 import time
 from datetime import datetime, timezone
+from typing import Tuple, TypeVar
 
 from colorama import Fore, Style, Back
 
@@ -31,7 +32,7 @@ def prepare_time():
     return log_time, console_time
 
 
-def create_message(text: str, additional_prefix: str, log_type: str) -> str:
+def pretty_message(text: str, additional_prefix: str, log_type: str) -> str:
     log_time, console_time = prepare_time()
     return f"{log_type}{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}"
 
@@ -39,12 +40,15 @@ def create_message(text: str, additional_prefix: str, log_type: str) -> str:
 class Logger(metaclass=SingletonMeta):
     __file = None
     __lInstance = None
+    __log_directory = None
 
-    def __init__(self, app_name=None, id=None, log_catalog_path=None, log_to_console=False):
+    def __init__(self, app_name=None, id=None, log_catalog_path=None, log_to_console=False,
+                 log_directory: dict | None = None):
         self.__log_catalog_path = log_catalog_path
         self.__app_name = app_name
         self.__instance_id = id
         self.__log_to_console = log_to_console
+        self.__log_directory = log_directory
         self.test_init()
 
         os.makedirs(self.__log_catalog_path, exist_ok=True)
@@ -63,9 +67,10 @@ class Logger(metaclass=SingletonMeta):
     """
 
     @staticmethod
-    def log(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'LOG')
-        print(Logger.__lInstance)
+    def log(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(
+            Logger.__lInstance.__create_message(key, args),
+            additional_prefix, 'LOG')
         print(message, file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
             print(Fore.WHITE + message + Style.RESET_ALL)
@@ -77,8 +82,10 @@ class Logger(metaclass=SingletonMeta):
     """
 
     @staticmethod
-    def debug(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'DEBUG')
+    def debug(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(
+            Logger.__lInstance.__create_message(key, args),
+            additional_prefix, 'DEBUG')
         print(message, file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
             print(Fore.MAGENTA + message + Style.RESET_ALL)
@@ -88,9 +95,12 @@ class Logger(metaclass=SingletonMeta):
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix INFO)
     """
+
     @staticmethod
-    def info(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'INFO')
+    def info(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(
+            Logger.__lInstance.__create_message(key, args),
+            additional_prefix, 'INFO')
         print(message, file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
             print(Fore.WHITE + message + Style.RESET_ALL)
@@ -102,8 +112,10 @@ class Logger(metaclass=SingletonMeta):
     """
 
     @staticmethod
-    def warning(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'WARNING')
+    def warning(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(
+            Logger.__lInstance.__create_message(key, args),
+            additional_prefix, 'WARNING')
         print(message,
               file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
@@ -114,9 +126,12 @@ class Logger(metaclass=SingletonMeta):
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix SUCCESS)
     """
+
     @staticmethod
-    def success(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'SUCCESS')
+    def success(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(
+            Logger.__lInstance.__create_message(key, args),
+            additional_prefix, 'SUCCESS')
         print(message, file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
             print(Fore.GREEN + message + Style.RESET_ALL)
@@ -128,8 +143,10 @@ class Logger(metaclass=SingletonMeta):
     """
 
     @staticmethod
-    def error(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'ERROR')
+    def error(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(
+            Logger.__lInstance.__create_message(key, args),
+            additional_prefix, 'ERROR')
         print(message, file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
             print(Fore.RED + message + Style.RESET_ALL)
@@ -139,12 +156,24 @@ class Logger(metaclass=SingletonMeta):
     @:param text: Text to be logged
     @:param additional_prefix: Text to be inserted before LOG TYPE NAME eg. (prefix CRITICAL)
     """
+
     @staticmethod
-    def critical(text: str, additional_prefix: str = None):
-        message = create_message(text, additional_prefix, 'CRITICAL')
+    def critical(key: str, additional_prefix: str | None = None, *args):
+        message = pretty_message(Logger.__create_message(key, args), additional_prefix, 'CRITICAL')
         print(message, file=Logger.__lInstance.__file)
         if Logger.__lInstance.__log_to_console:
             print(Fore.BLACK + Back.RED + message + Style.RESET_ALL)
+
+    @staticmethod
+    def __create_message(key: str, args: Tuple) -> str:
+        try:
+            message = Logger.__lInstance.__log_directory[key]
+        except KeyError:
+            print(Fore.BLACK, Back.YELLOW, f"Message id {key} not in log dictionary", Style.RESET_ALL)
+            return "Message Empty"
+        for arg in args:
+            message = message.replace("$", arg, 1)
+        return message
 
     def test_init(self):
         if not self.__log_catalog_path:
@@ -153,6 +182,8 @@ class Logger(metaclass=SingletonMeta):
             raise TypeError("Instance name not set")
         if not self.__instance_id:
             raise TypeError("Instance number not set")
+        if not self.__log_directory:
+            raise TypeError("Log directory not set")
 
     def __del__(self):
         if self.__file:

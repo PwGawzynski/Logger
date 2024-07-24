@@ -8,43 +8,47 @@ try:
 except RuntimeError:
     pass
 
+log_directory = {
+    'MSG_TEST1': "This is a test message $",
+    'MSG_TEST2': "This is a test message $",
+    'MSG_TEST3': "This is a test message $",
+    'MSG_TEST4': "This is a test message $",
+    'MSG_TEST5': "This is a test message $",
+    'MSG_TEST6': "This is a test message $",
+    "MSG_TEST7": "This is a test message $",
+}
 
 lock = multiprocessing.Lock()
-Logger("TEST_LOGGER", "1", "logs", True)
+Logger("TEST_LOGGER", "1", "logs", True, log_directory)
 
 
 def test():
     with lock:
         for x in range(3):
-            Logger.info(f"Test {x}")
+            Logger.info(x)
 
 
-processes = []
-for i in range(3):
-    process = multiprocessing.Process(target=test)
-    process.start()
-    processes.append(process)
-for process in processes:
-    process.join()
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 test_log_file_path = os.path.join(current_dir, "logs")
 
-Logger.info("This is an info message")
-Logger.debug("This is a debug message")
-Logger.warning("This is a warning message")
-Logger.success("This is a success message")
-Logger.error("This is an error message")
-Logger.critical("This is a critical message")
-Logger.log("This is a log message")
+Logger.info('MSG_TEST1', None, 'default')
+Logger.debug('MSG_TEST2', None, 'default')
+Logger.warning('MSG_TEST3', None, 'default')
+Logger.success('MSG_TEST4', None, 'default')
+Logger.error('MSG_TEST5', None, 'default')
+Logger.critical('MSG_TEST6', None, 'default')
+Logger.log('MSG_TEST7', None, 'default')
 
-Logger.info("This is an info message", "TEST")
-Logger.debug("This is a debug message", "TEST")
-Logger.warning("This is a warning message", "TEST")
-Logger.success("This is a success message", "TEST")
-Logger.error("This is an error message", "TEST")
-Logger.critical("This is a critical message", "TEST")
-Logger.log("This is a log message", "TEST")
+Logger.info('MSG_TEST1', "GG", 'default')
+Logger.debug('MSG_TEST2', "GG", 'default')
+Logger.warning('MSG_TEST3', "GG", 'default')
+Logger.success('MSG_TEST4', "GG", 'default')
+Logger.error('MSG_TEST5', "GG", 'default')
+Logger.critical('MSG_TEST6', "GG", 'default')
+Logger.log('MSG_TEST7', "GG", 'default')
+
+
 
 if __name__ == '__main__':
     freeze_support()
