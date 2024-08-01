@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="logger",
-    version="0.0.13",
+    version="0.0.14",
     packages=find_packages(),
     install_requires=[
         "colorama==0.4.6",
