@@ -42,11 +42,10 @@ class Logger(metaclass=SingletonMeta):
     __lInstance = None
     __log_directory = None
 
-    def __init__(self, app_name=None, id=None, log_catalog_path=None, log_to_console=False,
+    def __init__(self, app_name=None, log_catalog_path=None, log_to_console=False,
                  log_directory: dict | None = None):
         self.__log_catalog_path = log_catalog_path
         self.__app_name = app_name
-        self.__instance_id = id
         self.__log_to_console = log_to_console
         self.__log_directory = log_directory
         self.test_init()
@@ -54,7 +53,7 @@ class Logger(metaclass=SingletonMeta):
         os.makedirs(self.__log_catalog_path, exist_ok=True)
 
         # Create the log file path with a safe filename
-        log_file_name = f'{self.__app_name}_{self.__instance_id}_logs_' \
+        log_file_name = f'{self.__app_name}_LOG_' \
                         f'{datetime.now(timezone.utc).strftime("%Y-%m-%d_%H:%M:%S.%f")[:-3]}.log'
         log_file_path = os.path.join(self.__log_catalog_path, log_file_name)
         self.__file = open(log_file_path, 'w+')
@@ -180,8 +179,6 @@ class Logger(metaclass=SingletonMeta):
             raise TypeError("Log catalog path not set")
         if not self.__app_name:
             raise TypeError("Instance name not set")
-        if not self.__instance_id:
-            raise TypeError("Instance number not set")
         if not self.__log_directory:
             raise TypeError("Log directory not set")
 

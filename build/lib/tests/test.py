@@ -19,7 +19,7 @@ log_directory = {
 }
 
 lock = multiprocessing.Lock()
-Logger("TEST_LOGGER", "1", "logs", True, log_directory)
+Logger("TEST_LOGGER", "logs", True, log_directory)
 
 
 def test():
