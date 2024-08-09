@@ -37,13 +37,14 @@ def pretty_message(text: str, additional_prefix: str, log_type: str) -> str:
     return f"{log_type}{' ' + additional_prefix if additional_prefix else ''}: [{log_time}]: \t {text}"
 
 
-class Logger(metaclass=SingletonMeta):
+class Logger():
     __file = None
     __lInstance = None
     __log_directory = None
 
     def __init__(self, app_name=None, log_catalog_path=None, log_to_console=False,
                  log_directory: dict | None = None):
+        print("Logger init")
         self.__log_catalog_path = log_catalog_path
         self.__app_name = app_name
         self.__log_to_console = log_to_console

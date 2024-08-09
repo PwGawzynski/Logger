@@ -18,8 +18,10 @@ log_directory = {
     "MSG_TEST7": "This is a test message $",
 }
 
+
 lock = multiprocessing.Lock()
 Logger("TEST_LOGGER", "logs", True, log_directory)
+
 
 
 def test():
